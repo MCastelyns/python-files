@@ -40,9 +40,10 @@ def update(q, u, params):
     
 if __name__ == "__main__":
     dt = 0.1
-    horizon_s = estimate_horizon()
-    horizon = int(horizon_s / dt) #Now we convert the time in seconds to amount of timesteps using dt, and force it to be an int
+    #horizon_s = estimate_horizon()
+    #horizon = int(horizon_s / dt) #Now we convert the time in seconds to amount of timesteps using dt, and force it to be an int
     # Params: 1 = truck, 2 = trailer, M = hitch offset/length
+    horizon = 200
     params = {"M": 0.15, 
               "L1": 7.05, "L2": 12.45, 
               "W1": 3.05, "W2": 2.95,
@@ -72,8 +73,8 @@ if __name__ == "__main__":
     R[0, 0] = 10.  # acceleration 
     R[1, 1] = 10.  # steering speed 
     # (x, y, theta, psi, phi, v) lower and upper bounds 
-    state_bound = {"lb": ca.DM([-ca.inf, -ca.inf, -ca.inf, -ca.pi/2., -ca.pi/4., -5.]), #heading constraint was -pi,pi
-                   "ub": ca.DM([ ca.inf,  ca.inf,  ca.inf,  ca.pi/2.,  ca.pi/4.,  10.])}      
+    state_bound = {"lb": ca.DM([-ca.inf, -ca.inf, -ca.inf, -ca.pi/3., -ca.pi/4., -5.]), #heading constraint was -pi,pi
+                   "ub": ca.DM([ ca.inf,  ca.inf,  ca.inf,  ca.pi/3.,  ca.pi/4.,  10.])}      
     input_bound = {"lb": ca.DM([-5, -ca.pi/2]),
                    "ub": ca.DM([ 5,  ca.pi/2])}
     planner = TrajectoryOptimization(model, params,
@@ -137,7 +138,7 @@ if __name__ == "__main__":
         
         # Add plot of hybrid A* (reference trajectory)
         # Get the states from the json
-        with open('initialize.json', 'r') as f:
+        with open('python-files\initialize.json', 'r') as f:
             data = json.load(f)
 
         

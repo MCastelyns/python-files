@@ -89,7 +89,7 @@ class TrajectoryOptimization(TrajectoryPlanning):
     
     def _collision_constraints(self):
         # Rectangles
-        d_min = 0.02 # Why does the plot get so weird when we make d_min high, is that supposed to happen?
+        d_min = 0.2 # Why does the plot get so weird when we make d_min high, is that supposed to happen?
         Gv, gv = self._dynamics.get_vehicle_Hrep() # Half-space representation of the vehicle (still centered at 0)
         Gt, gt = self._dynamics.get_trailer_Hrep() # Half-space representation of the trailer (still centered at 0)
         g_col = [] # Empty array for collision constraints
@@ -164,8 +164,8 @@ class TrajectoryOptimization(TrajectoryPlanning):
     
     def _final_state_constraint(self):
         g_fin = ca.vertcat([], self._states_sm[:,-1] - self._goal_state_sm)
-        lb_fin = -1e-3*ca.DM.ones(g_fin.shape)
-        ub_fin = 1e-3*ca.DM.ones(g_fin.shape)
+        lb_fin = -1e-2*ca.DM.ones(g_fin.shape)
+        ub_fin = 1e-2*ca.DM.ones(g_fin.shape)
         
         return g_fin, lb_fin, ub_fin
     
@@ -226,7 +226,7 @@ class TrajectoryOptimization(TrajectoryPlanning):
         num_obstacle = len(self.obstacle_list)
 
         # Get the states from the json
-        with open('initialize.json', 'r') as f:
+        with open('python-files\initialize.json', 'r') as f:
             data = json.load(f)
 
         # Now we can access the data from the file. For example:
@@ -305,7 +305,8 @@ class TrajectoryOptimization(TrajectoryPlanning):
         return states.full(), inputs.full(), mus.full(), lams.full()    
     
     def plan(self, initial_state, goal_state):
-        vars_guess = self._hybrid_a_star_initial_trajectory() # vars_guess = self._generate_initial_trajectory_guess(initial_state, goal_state)
+        vars_guess = self._generate_initial_trajectory_guess(initial_state, goal_state) # vars_guess = self._generate_initial_trajectory_guess(initial_state, goal_state)
+        #vars_guess = self._hybrid_a_star_initial_trajectory()
         
         start = time.time()
         sol = self._solver(
