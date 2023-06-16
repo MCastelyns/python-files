@@ -305,7 +305,7 @@ class TrajectoryOptimization(TrajectoryPlanning):
         return states.full(), inputs.full(), mus.full(), lams.full()    
     
     def plan(self, initial_state, goal_state):
-        vars_guess = self._generate_initial_trajectory_guess(initial_state, goal_state) # vars_guess = self._generate_initial_trajectory_guess(initial_state, goal_state)
+        vars_guess = self._hybrid_a_star_initial_trajectory() # vars_guess = self._generate_initial_trajectory_guess(initial_state, goal_state)
         #vars_guess = self._hybrid_a_star_initial_trajectory()
         
         start = time.time()

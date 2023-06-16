@@ -63,7 +63,7 @@ if __name__ == "__main__":
     #obstacle_list = [{"center": (5, -5), "width": 10, "height": 10}] # Not working case
 
     Q = np.eye(6)
-    Q[0, 0] = 1.  # x position
+    Q[0, 0] = 1.  # x position 
     Q[1, 1] = 1.  # y position 
     Q[2, 2] = 1.  # truck heading 
     Q[3, 3] = 1.  # hitch angle 

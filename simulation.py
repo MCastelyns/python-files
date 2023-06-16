@@ -6,6 +6,8 @@ from draw import draw_truck_trailer
 import math
 from truck_trailer_model import TruckTrailerModel
 from mpc_control import MPCTrackingControl
+from get_obstacles import get_obstacles
+from get_initial_goal_states import get_initial_goal_states
 import casadi as ca
 import copy
 import os
@@ -60,7 +62,8 @@ if __name__ == "__main__":
               "horizon": horizon}
             
     model = TruckTrailerModel(params)
-    obstacle_list = [{"center": (5, -5), "width": 10, "height": 10}]
+    #obstacle_list = [{"center": (5, -5), "width": 10, "height": 10}]
+    obstacle_list = get_obstacles()
     Q = np.eye(6)
     Q[0, 0] = 1.  # x position 
     Q[1, 1] = 1.  # y position 
@@ -79,8 +82,12 @@ if __name__ == "__main__":
     controller = MPCTrackingControl(model, params,
                                     Q, R, 
                                     state_bound, input_bound)
-    initial_state = np.array([0., 3., 0., 0., 0., 0.])
-    # initial_state = np.array([-2., 5., pi/6, 0., 0., 0.]) was on when we got the file
+    initial_state, goal_state = get_initial_goal_states()
+    initial_state.append(0)
+    initial_state.append(0)
+    initial_state = np.array(initial_state)
+    # initial_state = np.array([0., 3., 0., 0., 0., 0.])
+   
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
     ref_state_traj = np.loadtxt(dir_path+'/data/state_traj.txt')
@@ -88,8 +95,8 @@ if __name__ == "__main__":
     
     ref_state_traj, ref_input_traj = do_interpolation(ref_state_traj, ref_input_traj, dt_to, dt)
     
-    T_sim = 30.
-    # T_sim = 10.
+    T_sim = 20.
+    # T_sim = 10. / 30
     time = 0.
     
     state = copy.deepcopy(initial_state)
